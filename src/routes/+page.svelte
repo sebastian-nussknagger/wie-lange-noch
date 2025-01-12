@@ -33,6 +33,10 @@
 	let timeDifference = $derived(calculateTimeDifference(selectedDate));
 </script>
 
+<svelte:head>
+	<title>Wie lange noch bis...</title>
+</svelte:head>
+
 <div class="background flex min-h-screen w-full items-center justify-center p-4">
 	<div class="card flex w-full max-w-md flex-col items-center">
 		<h1 class="heading mb-4">Wie lange noch bis...</h1>
