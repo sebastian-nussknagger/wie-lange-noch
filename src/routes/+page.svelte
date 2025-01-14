@@ -35,6 +35,8 @@
 
 <svelte:head>
 	<title>Wie lange noch bis...</title>
+	<meta name="description" content="Wie lange noch bis zu einem bestimmten Datum?" />
+	<meta property="og:image" content="https://wie-lange-noch-bis.vercel.app/og-image.png" />
 </svelte:head>
 
 <div class="background flex min-h-screen w-full items-center justify-center p-4">
@@ -50,7 +52,8 @@
 
 		{#if timeDifference !== null}
 			<p class="text-lg font-semibold">
-				{timeDifference} Tage
+				{timeDifference}
+				{timeDifference === 1 ? 'Tag!!!' : 'Tage'}
 			</p>
 		{/if}
 	</div>
