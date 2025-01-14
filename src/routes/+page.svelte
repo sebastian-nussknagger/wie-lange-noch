@@ -1,34 +1,44 @@
 <script lang="ts">
 	const dates = [
-		{ label: "Doro's Geburtstag", date: '2025-01-15' },
-		{ label: "Nora's Geburtstag", date: '2025-03-05' },
-		{ label: "Sebastian's Geburtstag", date: '2025-04-12' },
-		{ label: "Bene's Geburtstag", date: '2025-10-07' },
-		{ label: 'Weihnachten', date: '2025-12-24' }
+		{ label: "Doro's Geburtstag", date: '01-15' },
+		{ label: "Nora's Geburtstag", date: '03-05' },
+		{ label: "Sebastian's Geburtstag", date: '04-12' },
+		{ label: "Bene's Geburtstag", date: '10-07' },
+		{ label: 'Weihnachten', date: '12-24' }
 	];
 
 	let selectedDate = $state(dates[0].date);
 
+	function getNextOccurrence(monthDay: string): Date {
+		const [month, day] = monthDay.split('-').map(Number);
+		const now = new Date();
+		const thisYear = now.getFullYear();
+		const dateThisYear = new Date(thisYear, month - 1, day);
+
+		// If the date has already passed this year, use next year
+		return dateThisYear < now ? new Date(thisYear + 1, month - 1, day) : dateThisYear;
+	}
+
 	function findClosestDate() {
 		const now = new Date().getTime();
 		return dates.reduce((closest, current) => {
-			const closestDiff = Math.abs(new Date(closest.date).getTime() - now);
-			const currentDiff = Math.abs(new Date(current.date).getTime() - now);
-			return currentDiff < closestDiff ? current : closest;
+			const closestDate = getNextOccurrence(closest.date).getTime();
+			const currentDate = getNextOccurrence(current.date).getTime();
+			return currentDate - now < closestDate - now ? current : closest;
 		});
+	}
+
+	function calculateTimeDifference(monthDay: string) {
+		if (!monthDay) return null;
+		const now = new Date();
+		const targetDate = getNextOccurrence(monthDay);
+		const diffInMs = targetDate.getTime() - now.getTime();
+		return Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
 	}
 
 	$effect(() => {
 		selectedDate = findClosestDate().date;
 	});
-
-	function calculateTimeDifference(date: string) {
-		if (!date) return null;
-		const now = new Date();
-		const targetDate = new Date(date);
-		const diffInMs = targetDate.getTime() - now.getTime();
-		return Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
-	}
 
 	let timeDifference = $derived(calculateTimeDifference(selectedDate));
 </script>
@@ -36,7 +46,7 @@
 <svelte:head>
 	<title>Wie lange noch bis...</title>
 	<meta name="description" content="Wie lange noch bis zu einem bestimmten Datum?" />
-	<meta property="og:image" content="https://wie-lange-noch-bis.vercel.app/og-image.png" />
+	<meta property="og:image" content="/og-image.png" />
 </svelte:head>
 
 <div class="background flex min-h-screen w-full items-center justify-center p-4">
