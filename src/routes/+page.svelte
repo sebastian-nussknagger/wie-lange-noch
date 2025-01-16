@@ -5,7 +5,12 @@
 		{ label: "Sebastian's Geburtstag", date: '04-12' },
 		{ label: "Bene's Geburtstag", date: '10-07' },
 		{ label: 'Weihnachten', date: '12-24' }
-	];
+	].sort((a, b) => {
+		const now = new Date().getTime();
+		const dateA = getNextOccurrence(a.date).getTime();
+		const dateB = getNextOccurrence(b.date).getTime();
+		return dateA - now - (dateB - now);
+	});
 
 	let selectedDate = $state(dates[0].date);
 
